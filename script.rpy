@@ -10,8 +10,11 @@
 # The game starts here.
 ###########################
 label start:
+    default westKey = 0
+
     scene opening
     show player n
+
 
     you "So... I'm finally here"
     "(You get out of the taxi and pull your bag out of the back)"
@@ -136,7 +139,7 @@ label puzzleBox:
             jump puzzleBox
 
 label hallway:
-    "(The stairs to your right, and two separated rooms to your left)"
+    "(The stairs to your right, and a separate rooms to your left)"
 
     "What do you do?"
     menu:
@@ -146,7 +149,7 @@ label hallway:
             "(To your relief, there is none)"
             jump upstairsHallway
 
-        "Go into Room 1":
+        "Go into the room":
             "(You walk to the first room and push on the door)"
             "(You let out a sigh)"
             you "Of course it is..."
@@ -155,12 +158,6 @@ label hallway:
             you "What the?"
             silence "..."
             jump room1Lock
-
-        "Go to Room 2":
-            "(You walk to the second room and push on the door)"
-            "(You let out a sigh)"
-            you "Of course it is..."
-            jump room2Lock
 
 label upstairsHallway:
     "(There's four doors at the top of the stairs, one to the north, one east, one around the corner to the south, and one to the west)"
@@ -185,10 +182,13 @@ label upstairsHallway:
             jump upstairsHallway
 
         "West":
-            "(It's locked)"
-            "(But there's a number on the door handle)"
-            "(2)"
-            jump upstairsHallway
+            if westKey >= 1:
+                jump westOpen
+            elif westKey <= 0:
+                "(It's locked)"
+                "(But there's a number on the door handle)"
+                "(2)"
+                jump upstairsHallway
 
         "Go back down the stairs":
             jump hallway
@@ -326,17 +326,36 @@ label room1Open:
     "What do you do?"
     menu:
         "Check the ornament on the wall":
-            "(Keysssss)"
+            "(There's a weird contraption with a single key dangling from it)"
+            "(There's a cowboy hat on a keyring and a label on the key saying 'The Wild ----')"
+            "(the last word had been scratched off)"
+            you "Why did you need to puzzle everything?"
+            $ westKey = westKey +1
+            "(You pick up the key)"
+            jump westKeyGot
 
         "Look through the boxes":
             "(Toysssss)"
+label westKeyGot:
+    "What do you do?"
+    menu:
+        "Look through the boxes":
+            "(Toysssss)"
+
+        "Go back into the hallway":
+            jump hallway
 
 
 
+# North room - bedroom
 
-label room2Lock:
-    "(There's a padlock on the door)"
+# East room - bathroom
 
+# South room - child's bedroom
+
+# West room - library
+label westOpen:
+    "....."
 
     # This ends the game.
 
