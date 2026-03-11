@@ -3,19 +3,15 @@
 # Psychological horror? Character "Silence" never saying anything and being
 # an ominous background noise. Player waits for Silence as if it'll actually
 # say something... And it might?
+# RE2 Police Station type puzzles for no reason, just like in RE2 lol
 
+
+###########################
 # The game starts here.
-
+###########################
 label start:
-
-    # Show a background. This uses a placeholder by default, but you can
-    # add a file (named either "bg room.png" or "bg room.jpg") to the
-    # images directory to show it.
-
     scene opening
     show player n
-
-    # These display lines of dialogue.
 
     you "So... I'm finally here"
     "(You get out of the taxi and pull your bag out of the back)"
@@ -24,10 +20,6 @@ label start:
     "(An inheritance from a very distant family member you never even met...)"
     "(You hear the taxi drive away back down the gravel road)"
     you "I should go inside before it gets too dark"
-
-    # try front door
-        # locked, check phone?
-        # Thought the lawyers would be here... key is in back garden under a rock
 
 # Door is locked, key is in the back garden under a rock, in an envelope, hidden by the lawyers
 # who informed you of your new home
