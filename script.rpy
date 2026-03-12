@@ -5,6 +5,20 @@
 # say something... And it might?
 # RE2 Police Station type puzzles for no reason, just like in RE2 lol
 
+#############################
+# Play through order
+#############################
+# Backdoor key
+# Kitchen door
+# Living room door
+# Upstairs West door
+# Upstairs South door
+# Upstairs East door
+# Upstairs North door
+# Fusebox found and flipped
+# Front door key found
+
+# fusebox so lights on in game after flipped
 
 ###########################
 # The game starts here.
@@ -17,11 +31,14 @@ label start:
     default westKey = 0
     # Living room door
     default livingRoomOpen = 0
+    # Front door
+    default frontDoorKey = 0
+    # fuse box
+    default fusebox = 0
 
+# Front Door
     scene opening
     show player n
-
-
     you "So... I'm finally here"
     "(You get out of the taxi and pull your bag out of the back)"
     "(An old house is before you, in the middle of nowhere, surrounded by a forest.)"
@@ -42,13 +59,15 @@ label start:
 #            play sound "audio/locked.mp3"
             "(You remember the lawyer saying something about a 'hide-a-key' somewhere...)"
             menu:
-                "Go around to the back garden?":
+                "Check your phone":
+                    "(The lawyer had text about a hide-a-key in the back garden by the back door)"
+                    you "Guess I should try the back garden"
                     jump backGarden
 
         "Go around to the back garden":
             jump backGarden
 
-
+# Back door unlock
 label backGarden:
     "(You go around the side of the house and open the gate)"
     # play sound "audio/gate.mp3"
@@ -78,6 +97,7 @@ label pickUpRock:
     "(It's the kitchen)"
     jump kitchen
 
+# Kitchen unlock
 label kitchen:
     scene kitchen
     "(It's small, cramped, and cluttered with old plates, cups, and cutlery)"
@@ -110,6 +130,30 @@ label kitchen:
             "(You decide to try the door near the hallway and realise it's locked)"
             you "Who locks their inside doors? We're in the middle of nowhere it's not like someone would be robbing the place"
             jump hallwayDoor
+
+label kitchen2:
+    scene kitchen
+    "(It's small, cramped, and cluttered with old plates, cups, and cutlery)"
+    "What do you do?"
+    menu:
+        "Look around":
+            "(There's two ovens, a hob, a long counter top, a sink, and a door)"
+        "Make yourself a cup of tea":
+            "(You rinse and fill the kettle up)"
+            "(Pulling some teabags out of your bag, you place it into a rinsed cup)"
+            silence "..."
+            if fusebox <= 0:
+                "(Pressing the button on the kettle you realise the power isn't on in the kitchen, maybe there's a fuse box somewhere?)"
+                "(You leave the kitchen again to search for a fusebox)"
+                jump hallway
+            elif fusebox >= 1:
+                "(Pressing the button on the kettle causes a small hiss to start as the water boils)"
+                you "Finally! I really needed a cup of tea right now"
+                "(After half a minute it clicks, and the hot water is ready)"
+                "(You make yourself a cup of tea, it looks delicious.)"
+                you "I should find somewhere to relax and drink this"
+                jump hallway
+
 
 label hallwayDoor:
     scene hallwayDoor
@@ -144,6 +188,7 @@ label puzzleBox:
             silence "..."
             jump puzzleBox
 
+# Hallway open
 label hallway:
     "(The stairs to your right, and a separate rooms to your left)"
 
@@ -168,6 +213,16 @@ label hallway:
                 silence "..."
                 jump room1Lock
 
+        "Go to the front door":
+            "(It's locked)"
+            "(There's no sign of a key being anywhere near the key hooks by the door)"
+            you "I wonder where the key is?"
+            jump hallway
+
+        "Go into the kitchen":
+            jump kitchen2
+
+# North, East, South, West doors unlock
 label upstairsHallway:
     "(There's four doors at the top of the stairs, one to the north, one east, one around the corner to the south, and one to the west)"
     "What do you do?"
@@ -211,6 +266,7 @@ label upstairsHallway:
         "Go back down the stairs":
             jump hallway
 
+# Living room door keypad lock
 label room1Lock: #1362
         you "Never Eat Shredded Wheat huh?"
         "What do you do?"
@@ -310,7 +366,7 @@ label room1Lock4: #1362
                 "(The lock resets)"
                 jump room1Lock
 
-
+# Living room unlocked
 label room1Open:
     "(The door opens)"
     "(A different smell permiates the air this time as the seal on the door
@@ -356,7 +412,7 @@ label room1Open:
 
         "Look through the boxes":
             "(Toysssss)"
-
+# West key got
 label westKeyGot:
     "What do you do?"
     menu:
@@ -368,32 +424,118 @@ label westKeyGot:
 
 
 
-# North room - bedroom
+# North room - office/storage - Final upstair key received
 label northOpen:
-    "....."
-    jump upstairsHallway
-# East room - bathroom
-label eastOpen:
+    "(The inside air pours out as the seal on the door is broken)"
+    you "An office room... or storage?"
+    "(The room is filled with boxes, papers, and houses a table and chair to the left)"
+    you "There's a fuse box...?"
+    "(There's also what seems to be a fuse box on the wall)"
 
+    "What do you do?"
+    menu:
+        "Flip the fuses":
+            "(There's a key wedged into the fusebox)"
+            menu:
+                "Remove the key":
+                    "(The key pulls out with little force)"
+                    you "Is this the front door key?"
+                    $ frontDoorKey = frontDoorKey +1
+                    you "At this point I'm not even going to ask..."
+        "Go back to the hallway":
+            you "I don't trust myself with fuse boxes"
+            jump ending1
+    menu:
+        "Flip the fuses":
+            "(You flip the switches and hear a hum of electricity.)"
+            $ fusebox = fusebox +1
+            "(A few old lamps and lights seem to turn on in the house)"
+
+
+    jump upstairsHallway
+
+# East room - bathroom - Third upstair key recieved
+label eastOpen:
+    "(The inside air pours out as the seal on the door is broken)"
     "....."
     "(You pick up the key)"
     $ northKey = northKey +1
     jump upstairsHallway
 
-# South room - child's bedroom
+# South room - child's bedroom - Second upstair key recieved
 label southOpen:
-    "....."
-    "(You pick up the key)"
+    "(The inside air does nothing as the seal on the door is broken)"
+    "(It is deathly silent and it feels like there's no atmosphere at all)"
+    you "It's a children's bedroom?"
+    "(A teddy bear with a key in it's ribbon sits on a rocking chair)"
+    "(Although the chair looks to be in usable and functioning, it doesn't budge even with the air from
+    the door blowing in it's direction when you opened the door)"
+    you "Abandonned children rooms are always creepy..."
+    "(You untie the ribbon on the bear and pick up the key)"
+    silence "..."
+    "(You feel the hairs on the back of your neck raise)"
+    you "Must be the win... well, lack of... wind... yeah..."
+    "(You make your way back into the upstairs hallway)"
     $ eastKey = eastKey +1
     jump upstairsHallway
 
-# West room - library
+# West room - master bedroom - First upstair key received
 label westOpen:
-    "....."
-    "(You pick up the key)"
-    $ southKey = southKey +1
-    jump upstairsHallway
+    "(Once again the inside air rushes out into the hallway as the seal on the door is broken open)"
+    you "Huh... a bedroom?"
+    "(The room is eluminated by the lack of curtains on the window, letting the moonlight pour inside)"
+    "(Several wardrobes and a single bed are all that reside here)"
+
+    "What do you do?"
+    menu:
+        "Check thr draws":
+            "(They're suspiciously empty)"
+            "(Clean too, not one bit of dust is inside of the draws)"
+            you "Nope! Not today! Not going to try to think about why this is the
+            only clean part of the entire house!"
+            "(You close the draws and look around)"
+
+            menu:
+                "Check the wardrobes?":
+                    "(A coat hanger with a key hangs inside, it has a keyring from the South Pole on it)"
+                    you "cute"
+                    "(The rest of the wardrobes contents are filled with moth eaten clothing dating
+                    back to the 50's and 60's)"
+                    "(You sigh)"
+                    you "These aren't my style but damn they would have been worth so much money
+                    if they were intact"
+                    "(You move the clothing aside and take off the key)"
+                    $ southKey = southKey +1
+                    jump upstairsHallway
+
+        "Check the wardrobes":
+            "(A coat hanger with a key hangs inside it has a keyring from the South Pole on it)"
+            you "cute"
+            "(The rest of the wardrobes contents are filled with moth eaten clothing dating
+            back to the 50's and 60's)"
+            "(You sigh)"
+            you "These aren't my style but damn they would have been worth so much money
+            if they were intact"
+            "(You move the clothing aside and take off the key)"
+            $ southKey = southKey +1
+            jump upstairsHallway
+
+        "Go back into the hallway":
+            jump upstairsHallway
+
+
+label ending1:
+    "(Ending One:)"
+    "(You did not find the front door key, or restore the electricity)"
+    "(With how dark it is outside, you lock the back door up again and
+    pull out a sleeping bag)"
+    "(Making a makeshift bed up on the sofa in the living room)"
+    silence "..."
+    you "... huh?"
+    "(You still feel like you're being watched...)"
+    "(It's probably just your imagination because it's musty, damp, cold,
+    and all of the lights are still off)"
+    "(It takes some time, but you eventually fall asleep in your new home)"
 
     # This ends the game.
-
     return
