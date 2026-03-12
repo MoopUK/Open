@@ -35,10 +35,11 @@ label start:
     default frontDoorKey = 0
     # fuse box
     default fusebox = 0
+    # Cup of tea - Did you make a cup of tea before going to bed?
+    default tea = 0
 
 # Front Door
     scene opening
-    show player n
     you "So... I'm finally here"
     "(You get out of the taxi and pull your bag out of the back)"
     "(An old house is before you, in the middle of nowhere, surrounded by a forest.)"
@@ -71,7 +72,7 @@ label start:
 label backGarden:
     "(You go around the side of the house and open the gate)"
     # play sound "audio/gate.mp3"
-    scene back
+    scene backgarden
     "(The back garden is overgrown, dry, and cluttered)"
     "(You see a stone that looks a little uncanny next to the back door)"
     "(The lawyer mentioned something about a 'hide-a-key')"
@@ -116,7 +117,7 @@ label kitchen:
 
     "What do you do next?"
     menu:
-        "Go to the door":
+        "Go to the interior door":
             "(You try to open the door and realise it's locked)"
             silence "..."
             you "Who locks their inside doors? We're in the middle of nowhere it's not like someone would be robbing the place"
@@ -138,6 +139,15 @@ label kitchen2:
     menu:
         "Look around":
             "(There's two ovens, a hob, a long counter top, a sink, and a door)"
+            jump kitchen2
+        "Move some of the dishes to the sink":
+            you "I should probably try to clean some of these if I'm going to live here..."
+            silence "..."
+            "(You place some of the dishes into the sink and try the tap)"
+            "(It runs dark for a few seconds before spluttering to life with fresh, albeit freezing cold water)"
+            "((rinse, scrub, rinse))"
+            "(You washed some dishes)"
+            jump kitchen2
         "Make yourself a cup of tea":
             "(You rinse and fill the kettle up)"
             "(Pulling some teabags out of your bag, you place it into a rinsed cup)"
@@ -152,59 +162,64 @@ label kitchen2:
                 "(After half a minute it clicks, and the hot water is ready)"
                 "(You make yourself a cup of tea, it looks delicious.)"
                 you "I should find somewhere to relax and drink this"
+                $ tea = tea +1
                 jump hallway
 
-
 label hallwayDoor:
-    scene hallwayDoor
+    scene kitchen
     "(You look around the kitchen for a key or a hint of how to open the door in the hallway)"
+    scene keybox
     "(Noticing a key inside of a puzzle box, you take a good look at the puzzle)"
     jump puzzleBox
 
 label puzzleBox:
-    scene puzzleBox
     "what do you do?"
     menu:
-
-        "Turn the middle piece":
-            #play sound "audio/no.mp3"
-            "(Nothing happens)"
-            silence "..."
-            jump puzzleBox
-
-        "Turn the left piece":
-            #play sound "audio/yes.mp3"
-            "(It clicks)"
-            silence "..."
-            "(The key drops out)"
-            "(You open the hallway door and step inside)"
-            "(Again, a smell permiates the air as the seal on the door is broken and the inside air rushes out)"
-            "(Before you is a hallway with an old carpet runner slung to the side)"
-            jump hallway
-
         "Turn the right piece":
             #play sound "audio/no.mp3"
             "(Nothing happens.)"
             silence "..."
             jump puzzleBox
 
+        "Turn the middle piece":
+            #play sound "audio/yes.mp3"
+            scene solvedbox
+            "(It clicks)"
+            silence "..."
+            "(The key drops out)"
+            scene emptybox
+            "(You open the hallway door and step inside)"
+            scene hallway
+            "(Again, a smell permiates the air as the seal on the door is broken and the inside air rushes out)"
+            "(Before you is a hallway, in blood reds and browns)"
+            jump hallway
+
+        "Turn the left piece":
+            #play sound "audio/no.mp3"
+            "(Nothing happens)"
+            silence "..."
+            jump puzzleBox
+
+
 # Hallway open
 label hallway:
-    "(The stairs to your right, and a separate rooms to your left)"
+    scene hallway
+    "(The stairs to your right, the front door, and a separate rooms to your left)"
 
     "What do you do?"
     menu:
         "Go up the stairs":
-            "(There's a weirdly shaped staircase with a 180 degree turn halfway up)"
+            "(There's a weirdly shaped staircase with a 180 degree turn at the start)"
             "(You're half expecting a locked door stopping you from going all the way up the stairs)"
             "(To your relief, there is none)"
             jump upstairsHallway
 
         "Go into the room":
+            scene neswdoor
             if livingRoomOpen >= 1:
                 jump room1Open
             elif livingRoomOpen <= 0:
-                "(You walk to the first room and push on the door)"
+                "(You walk to the door and push on it)"
                 "(You let out a sigh)"
                 you "Of course it is..."
                 "(There's a keypad on the door handle with a note)"
@@ -214,16 +229,25 @@ label hallway:
                 jump room1Lock
 
         "Go to the front door":
-            "(It's locked)"
-            "(There's no sign of a key being anywhere near the key hooks by the door)"
-            you "I wonder where the key is?"
-            jump hallway
+            scene frontdoor
+            if frontDoorKey <= 0:
+                "(It's locked)"
+                "(There's no sign of a key being anywhere near the key hooks by the door)"
+                you "I wonder where the key is?"
+                jump hallway
+            elif frontDoorKey >= 1:
+                "(The front door opens)"
+                "(A cool air flows in, freshening up the damp, old smell that permiates the home)"
+                you "Well at least I can use my own front door now..."
+                "(You lock it back up and return to the hallway)"
+                jump hallway
 
-        "Go into the kitchen":
+        "Go into the kitchen again":
             jump kitchen2
 
 # North, East, South, West doors unlock
 label upstairsHallway:
+    scene upstairshallway
     "(There's four doors at the top of the stairs, one to the north, one east, one around the corner to the south, and one to the west)"
     "What do you do?"
     menu:
@@ -368,62 +392,72 @@ label room1Lock4: #1362
 
 # Living room unlocked
 label room1Open:
-    "(The door opens)"
-    "(A different smell permiates the air this time as the seal on the door
-    is broken and the inside air rushes out)"
-    silence "..."
-    "(It takes a moment for your eyes to adjust, but you notice a beam of moonlight coming through a
-    curtain on the other side)"
+    scene livingroom
+    if fusebox <= 0:
 
-    "What do you do?"
-    menu:
-        "Open the curtains":
-            "(You carefully walk through the boxes aand clutter to get to the curtains)"
-            "(Opening the curtains, moonlight floods into the room)"
-            scene openCurtainLivingRoom
-            "(Revealing it's a living room, although the dust pile up implies nothing has been living here
-            for quite some time)"
+        "(The living room door opens)"
+        "(A different smell permiates the air this time as the seal on the door
+        is broken and the inside air rushes out)"
+        silence "..."
+        "(It takes a moment for your eyes to adjust, but you notice a beam of moonlight coming through a
+        curtain on the other side)"
 
-        "Try the lights":
-            "(There's no power)"
-            you "There has to be a fusebox somewhere..."
-            silence "..."
-            you "... hello?"
-            "(The silence feels weighted, as you feel like someone is with you)"
-            "(but there's no reason for why anyone else would be here)"
-            "(It's probably just your imagination...)"
-            "(To ease your mind you pull open the curtains to let some light inside)"
-            scene openCurtainLivingRoom
+        "What do you do?"
+        menu:
+            "Open the curtains":
+                "(You carefully walk through the boxes and clutter to get to the curtains)"
+                "(Opening the curtains, moonlight floods into the room)"
+                scene opencurtainlivingroom
+                "(Revealing it's a living room, although the dust pile up implies nothing has been living here
+                for quite some time)"
 
-    "(There's a lot of boxes, stuffed with the memories of that late family member you never met)"
-    "(The walls are near barren, except for an oddly shaped ornament, illuminated by the light from the moon)"
+            "Try the lights":
+                    "(There's no power)"
+                    you "There has to be a fusebox somewhere..."
+                    silence "..."
+                    you "... hello?"
+                    "(The silence feels weighted, as you feel like someone is with you)"
+                    "(but there's no reason for why anyone else would be here)"
+                    "(It's probably just your imagination...)"
+                    "(To ease your mind you pull open the curtains to let some light inside)"
+                    scene opencurtainlivingroom
 
-    "What do you do?"
-    menu:
-        "Check the ornament on the wall":
-            "(There's a weird contraption with a single key dangling from it)"
-            "(There's a cowboy hat on a keyring and a label on the key saying 'The Wild ----')"
-            "(the last word had been scratched off)"
-            you "Is this a really simple *riddle* of sorts to open one of the doors upstairs
-            or am I under thinking this?"
-            $ westKey = westKey +1
-            "(You pick up the key)"
-            jump westKeyGot
+        "(There's a lot of boxes, stuffed with the memories of that late family member you never met)"
+        "(The walls are near barren, except for an oddly shaped ornament, illuminated by the light from the moon)"
 
-        "Look through the boxes":
-            "(Toysssss)"
-# West key got
-label westKeyGot:
-    "What do you do?"
-    menu:
-        "Look through the boxes":
-            "(Toysssss)"
+        "What do you do?"
+        menu:
+            "Check the ornament on the wall":
+                scene livingroomkey
+                "(There's a weird contraption with a single key dangling from it)"
+                "(There's a cowboy hat on a keyring and a label on the key saying 'The Wild ----')"
+                "(the last word had been scratched off)"
+                you "Is this a really simple *riddle* of sorts to open one of the doors upstairs
+                or am I under thinking this?"
+                $ westKey = westKey +1
+                "(You pick up the key and decide to go back into the hallway)"
+                jump hallway
 
-        "Go back into the hallway":
-            jump hallway
+            "Look through the boxes":
+                "(There's a lot of cooking books, knitting patterns, bits of clutter, and some baby toys in the boxes)"
+                silence "..."
+                you "I heard they were alone when they died, I don't think they were married either..."
+                you "Kind of why I got the house in the first place, there was no will and I'm the last person left in our bloodline"
+                "(You close the boxes back up)"
+                menu:
+                    "Check the ornament on the wall":
+                        scene livingroomkey
+                        "(There's a weird contraption with a single key dangling from it)"
+                        "(There's a cowboy hat on a keyring and a label on the key saying 'The Wild ----')"
+                        "(the last word had been scratched off)"
+                        you "Is this a really simple *riddle* of sorts to open one of the doors upstairs
+                        or am I overthinking this?"
+                        $ westKey = westKey +1
+                        "(You pick up the key and decide to go back into the hallway)"
+                        jump hallway
 
-
-
+    elif fusebox >= 1:
+        jump ending2
 # North room - office/storage - Final upstair key received
 label northOpen:
     "(The inside air pours out as the seal on the door is broken)"
@@ -457,24 +491,67 @@ label northOpen:
 # East room - bathroom - Third upstair key recieved
 label eastOpen:
     "(The inside air pours out as the seal on the door is broken)"
-    "....."
-    "(You pick up the key)"
-    $ northKey = northKey +1
-    jump upstairsHallway
+    "(An oddly laid out bathroom)"
+    you "Wow, these fixtures will need redoing..."
+    "(You look around)"
+    "What do you do?"
+    menu:
+        "Check the medicine cabinet":
+            you "Another key?"
+            "(A key with the North Star on it's keyring)"
+            you "How'd you ever leave your house with the keys all locked in different rooms?"
+            silence "..."
+            you "...?"
+            silence "..."
+            "(You feel uneasy)"
+            you "I was just talking out loud! Out loud to noone in particular!"
+            you "Please don't let something answer me in the dark, I'm creeped out enough in here as it is"
+            silence "..."
+            "(You head back into the hallway)"
+            $ northKey = northKey +1
+            jump upstairsHallway
+
+        "Flush the toilet":
+            "(The toilet flushes with a sputter, barely making a mark on the limescale that coats the inside of the bowl)"
+            you "Gross..."
+            you "Note to self to buy some toilet cleaner... and a brush..."
+            "(You look at the toilet roll holder)"
+            you "And toilet roll... I hope I don't need the toilet tonight"
+            menu:
+                "Check the medicine cabinet":
+                    you "Another key?"
+                    "(A key with the North Star on it's keyring)"
+                    you "How'd you ever leave your house with the keys all locked in different rooms?"
+                    silence "..."
+                    you "...?"
+                    silence "..."
+                    "(You feel uneasy)"
+                    you "I was just talking out loud! Out loud to noone in particular!"
+                    you "Please don't let something answer me in the dark, I'm creeped out enough in here as it is"
+                    silence "..."
+                    "(You head back into the hallway)"
+                    $ northKey = northKey +1
+                    jump upstairsHallway
+        "Go back to the hallway":
+            jump upstairsHallway
+
 
 # South room - child's bedroom - Second upstair key recieved
 label southOpen:
     "(The inside air does nothing as the seal on the door is broken)"
     "(It is deathly silent and it feels like there's no atmosphere at all)"
+    silence "..."
+    scene southroom
     you "It's a children's bedroom?"
+    "(There's a room with a pristine cot, and toys arranged across a shelf)"
     "(A teddy bear with a key in it's ribbon sits on a rocking chair)"
-    "(Although the chair looks to be in usable and functioning, it doesn't budge even with the air from
+    "(Although the chair looks to be usable and functioning, it doesn't budge even with the air from
     the door blowing in it's direction when you opened the door)"
-    you "Abandonned children rooms are always creepy..."
-    "(You untie the ribbon on the bear and pick up the key)"
+    you "Abandoned child rooms are always creepy..."
+    "(You untie the ribbon on the bear and pick up the key. The keyring has a rising sun on it.)"
     silence "..."
     "(You feel the hairs on the back of your neck raise)"
-    you "Must be the win... well, lack of... wind... yeah..."
+    you "Must be the win... well, must be the lack of wind... yeah..."
     "(You make your way back into the upstairs hallway)"
     $ eastKey = eastKey +1
     jump upstairsHallway
@@ -482,13 +559,14 @@ label southOpen:
 # West room - master bedroom - First upstair key received
 label westOpen:
     "(Once again the inside air rushes out into the hallway as the seal on the door is broken open)"
+    scene westroom
     you "Huh... a bedroom?"
     "(The room is eluminated by the lack of curtains on the window, letting the moonlight pour inside)"
-    "(Several wardrobes and a single bed are all that reside here)"
+    "(Several wardrobes, some draws, and a single bed are all that reside here)"
 
     "What do you do?"
     menu:
-        "Check thr draws":
+        "Check the draws":
             "(They're suspiciously empty)"
             "(Clean too, not one bit of dust is inside of the draws)"
             you "Nope! Not today! Not going to try to think about why this is the
@@ -536,6 +614,17 @@ label ending1:
     "(It's probably just your imagination because it's musty, damp, cold,
     and all of the lights are still off)"
     "(It takes some time, but you eventually fall asleep in your new home)"
+    "(Ending 1: Restless night)"
 
+label ending2:
+    if tea >= 1:
+        "(You set up the sleeping bag on the sofa and sip from your tea whiles watching the nature in the back garden)"
+        "(Toads, newts, birds, and even a hedgehog can be seen. Living their lives in peace and harmony)"
+    elif tea <= 0:
+        "(You set up the sleeping bag on the sofa and watch the nature in the back garden)"
+        "(Toads, newts, birds, and even a hedgehog can be seen. Living their lives in peace and harmony)"
+
+    you "I think with a little work, I'm going to like it here..."
+    "(Ending 2: Restful night)"
     # This ends the game.
     return
