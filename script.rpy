@@ -10,7 +10,13 @@
 # The game starts here.
 ###########################
 label start:
+    # The upstair doors
+    default northKey = 0
+    default eastKey = 0
+    default southKey = 0
     default westKey = 0
+    # Living room door
+    default livingRoomOpen = 0
 
     scene opening
     show player n
@@ -150,36 +156,48 @@ label hallway:
             jump upstairsHallway
 
         "Go into the room":
-            "(You walk to the first room and push on the door)"
-            "(You let out a sigh)"
-            you "Of course it is..."
-            "(There's a keypad on the door handle with a note)"
-            "(Never Eat Shredded Wheat)"
-            you "What the?"
-            silence "..."
-            jump room1Lock
+            if livingRoomOpen >= 1:
+                jump room1Open
+            elif livingRoomOpen <= 0:
+                "(You walk to the first room and push on the door)"
+                "(You let out a sigh)"
+                you "Of course it is..."
+                "(There's a keypad on the door handle with a note)"
+                "(Never Eat Shredded Wheat)"
+                you "What the?"
+                silence "..."
+                jump room1Lock
 
 label upstairsHallway:
     "(There's four doors at the top of the stairs, one to the north, one east, one around the corner to the south, and one to the west)"
     "What do you do?"
     menu:
         "North":
-            "(It's locked)"
-            "(But there's a number on the door handle)"
-            "(1)"
-            jump upstairsHallway
+            if northKey >= 1:
+                jump northOpen
+            elif northKey <= 0:
+                "(It's locked)"
+                "(But there's a number on the door handle)"
+                "(1)"
+                jump upstairsHallway
 
         "East":
-            "(It's locked)"
-            "(But there's a number on the door handle)"
-            "(3)"
-            jump upstairsHallway
+            if eastKey >= 1:
+                jump eastOpen
+            elif eastKey <= 0:
+                "(It's locked)"
+                "(But there's a number on the door handle)"
+                "(3)"
+                jump upstairsHallway
 
         "South":
-            "(It's locked)"
-            "(But there's a number on the door handle)"
-            "(6)"
-            jump upstairsHallway
+            if southKey >= 1:
+                jump southOpen
+            elif southKey <= 0:
+                "(It's locked)"
+                "(But there's a number on the door handle)"
+                "(6)"
+                jump upstairsHallway
 
         "West":
             if westKey >= 1:
@@ -277,6 +295,7 @@ label room1Lock4: #1362
                 jump room1Lock
             "2":
                 "(The lock clicks open)"
+                $ livingRoomOpen = livingRoomOpen +1
                 jump room1Open
             "3":
                 "(The lock resets)"
@@ -329,13 +348,15 @@ label room1Open:
             "(There's a weird contraption with a single key dangling from it)"
             "(There's a cowboy hat on a keyring and a label on the key saying 'The Wild ----')"
             "(the last word had been scratched off)"
-            you "Why did you need to puzzle everything?"
+            you "Is this a really simple *riddle* of sorts to open one of the doors upstairs
+            or am I under thinking this?"
             $ westKey = westKey +1
             "(You pick up the key)"
             jump westKeyGot
 
         "Look through the boxes":
             "(Toysssss)"
+
 label westKeyGot:
     "What do you do?"
     menu:
@@ -348,14 +369,30 @@ label westKeyGot:
 
 
 # North room - bedroom
-
+label northOpen:
+    "....."
+    jump upstairsHallway
 # East room - bathroom
+label eastOpen:
+
+    "....."
+    "(You pick up the key)"
+    $ northKey = northKey +1
+    jump upstairsHallway
 
 # South room - child's bedroom
+label southOpen:
+    "....."
+    "(You pick up the key)"
+    $ eastKey = eastKey +1
+    jump upstairsHallway
 
 # West room - library
 label westOpen:
     "....."
+    "(You pick up the key)"
+    $ southKey = southKey +1
+    jump upstairsHallway
 
     # This ends the game.
 
