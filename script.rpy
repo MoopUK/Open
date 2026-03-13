@@ -37,6 +37,8 @@ label start:
     default fusebox = 0
     # Cup of tea - Did you make a cup of tea before going to bed?
     default tea = 0
+    # stairs - Have you been up the stairs once already? If so, don't play the same dialogue again
+    default stairs = 0
 
 # Front Door
     scene opening
@@ -191,7 +193,7 @@ label puzzleBox:
             "(You open the hallway door and step inside)"
             scene hallway
             "(Again, a smell permiates the air as the seal on the door is broken and the inside air rushes out)"
-            "(Before you is a hallway, in blood reds and browns)"
+            "(Before you is a hallway, painted in blood-like reds and browns)"
             jump hallway
 
         "Turn the left piece":
@@ -204,15 +206,19 @@ label puzzleBox:
 # Hallway open
 label hallway:
     scene hallway
-    "(The stairs to your right, the front door, and a separate rooms to your left)"
+    "(The stairs are to your right, the kitchen is behind you, the front door and a living rooms are to your left)"
 
     "What do you do?"
     menu:
         "Go up the stairs":
-            "(There's a weirdly shaped staircase with a 180 degree turn at the start)"
-            "(You're half expecting a locked door stopping you from going all the way up the stairs)"
-            "(To your relief, there is none)"
-            jump upstairsHallway
+            if stairs <= 0:
+                "(There's a weirdly shaped staircase with a 180 degree turn at the start)"
+                "(You're half expecting a locked door stopping you from going all the way up the stairs)"
+                "(To your relief, there is none)"
+                $ stairs = stairs +1
+                jump upstairsHallway
+            elif stairs >= 1:
+                jump upstairsHallway
 
         "Go into the room":
             scene neswdoor
@@ -229,13 +235,14 @@ label hallway:
                 jump room1Lock
 
         "Go to the front door":
-            scene frontdoor
             if frontDoorKey <= 0:
+                scene frontdoor
                 "(It's locked)"
                 "(There's no sign of a key being anywhere near the key hooks by the door)"
                 you "I wonder where the key is?"
                 jump hallway
             elif frontDoorKey >= 1:
+                scene frontdooropening
                 "(The front door opens)"
                 "(A cool air flows in, freshening up the damp, old smell that permiates the home)"
                 you "Well at least I can use my own front door now..."
@@ -296,7 +303,7 @@ label room1Lock: #1362
         "What do you do?"
         menu:
             "Come back later":
-                jump upstairsHallway
+                jump hallway
             "1":
                 "(It clicks once)"
                 jump room1Lock2
@@ -320,7 +327,7 @@ label room1Lock2: #1362
         "What do you do?"
         menu:
             "Come back later":
-                jump upstairsHallway
+                jump hallway
             "1":
                 "(The lock resets)"
                 jump room1Lock
@@ -345,7 +352,7 @@ label room1Lock3: #1362
         "What do you do?"
         menu:
             "Come back later":
-                jump upstairsHallway
+                jump hallway
             "1":
                 "(The lock resets)"
                 jump room1Lock
@@ -369,7 +376,7 @@ label room1Lock4: #1362
         "What do you do?"
         menu:
             "Come back later":
-                jump upstairsHallway
+                jump hallway
             "1":
                 "(The lock resets)"
                 jump room1Lock
@@ -460,18 +467,21 @@ label room1Open:
         jump ending2
 # North room - office/storage - Final upstair key received
 label northOpen:
+    scene northroom
     "(The inside air pours out as the seal on the door is broken)"
     you "An office room... or storage?"
-    "(The room is filled with boxes, papers, and houses a table and chair to the left)"
+    "(The room is filled with boxes, papers, exercise equiptment, a table, and a chair)"
     you "There's a fuse box...?"
     "(There's also what seems to be a fuse box on the wall)"
 
     "What do you do?"
     menu:
         "Flip the fuses":
+            scene fusebox
             "(There's a key wedged into the fusebox)"
             menu:
                 "Remove the key":
+                    scene fuseboxkeygone
                     "(The key pulls out with little force)"
                     you "Is this the front door key?"
                     $ frontDoorKey = frontDoorKey +1
@@ -481,19 +491,21 @@ label northOpen:
             jump ending1
     menu:
         "Flip the fuses":
+            scene fuseboxon
             "(You flip the switches and hear a hum of electricity.)"
             $ fusebox = fusebox +1
             "(A few old lamps and lights seem to turn on in the house)"
-
-
-    jump upstairsHallway
+            "(With the electricity on you feel like getting ready for some sleep)"
+            you "Hmm, I'm unsure if I want a cup of tea before bed or not..."
+            "(You leave the north room and go back down stairs)"
+    jump hallway
 
 # East room - bathroom - Third upstair key recieved
 label eastOpen:
     "(The inside air pours out as the seal on the door is broken)"
+    scene eastroom
     "(An oddly laid out bathroom)"
     you "Wow, these fixtures will need redoing..."
-    "(You look around)"
     "What do you do?"
     menu:
         "Check the medicine cabinet":
@@ -545,8 +557,8 @@ label southOpen:
     you "It's a children's bedroom?"
     "(There's a room with a pristine cot, and toys arranged across a shelf)"
     "(A teddy bear with a key in it's ribbon sits on a rocking chair)"
-    "(Although the chair looks to be usable and functioning, it doesn't budge even with the air from
-    the door blowing in it's direction when you opened the door)"
+    "(Although the chair looks to be usable and functioning, it doesn't budge, even with the movement from
+    the floor boards as you walk through the room)"
     you "Abandoned child rooms are always creepy..."
     "(You untie the ribbon on the bear and pick up the key. The keyring has a rising sun on it.)"
     silence "..."
@@ -603,28 +615,43 @@ label westOpen:
 
 
 label ending1:
+    scene ending1zz
     "(Ending One:)"
     "(You did not find the front door key, or restore the electricity)"
     "(With how dark it is outside, you lock the back door up again and
     pull out a sleeping bag)"
-    "(Making a makeshift bed up on the sofa in the living room)"
+    "(Making a makeshift bed up on the living room floor)"
     silence "..."
     you "... huh?"
     "(You still feel like you're being watched...)"
     "(It's probably just your imagination because it's musty, damp, cold,
     and all of the lights are still off)"
+    scene ending1z
     "(It takes some time, but you eventually fall asleep in your new home)"
+    silence "..."
     "(Ending 1: Restless night)"
 
 label ending2:
     if tea >= 1:
-        "(You set up the sleeping bag on the sofa and sip from your tea whiles watching the nature in the back garden)"
+        scene ending1a
+        "(You set up the sleeping bag on the floor of the living room and sip from your tea whiles watching the nature in the back garden)"
         "(Toads, newts, birds, and even a hedgehog can be seen. Living their lives in peace and harmony)"
-    elif tea <= 0:
-        "(You set up the sleeping bag on the sofa and watch the nature in the back garden)"
-        "(Toads, newts, birds, and even a hedgehog can be seen. Living their lives in peace and harmony)"
+        you "I think with a little work, I'm going to like it here..."
+        "(You doze off peacefully)"
+        silence "..."
+        scene ending1aa
 
-    you "I think with a little work, I'm going to like it here..."
+    elif tea <= 0:
+        scene ending1b
+        "(You set up the sleeping bag on the floor of the living room and watch the nature in the back garden)"
+        "(Toads, newts, birds, and even a hedgehog can be seen. Living their lives in peace and harmony)"
+        "(You're a little thirsty, maybe a cup of tea would have been nice?)"
+        "(Alas, you're too sleepy to think about that now)"
+        you "I think with a little work, I'm going to like it here..."
+        "(You doze off peacefully)"
+        silence "..."
+        scene ending1bb
+
     "(Ending 2: Restful night)"
     # This ends the game.
     return
