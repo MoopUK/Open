@@ -443,6 +443,7 @@ label livingroomopen:
                 you "Is this a really simple *riddle* of sorts to open one of the doors upstairs
                 or am I under thinking this?"
                 $ westKey = westKey +1
+                scene livingroomkey2
                 "(You pick up the key and decide to go back into the hallway)"
                 jump hallway
 
@@ -460,12 +461,14 @@ label livingroomopen:
                         "(the last word had been scratched off)"
                         you "Is this a really simple *riddle* of sorts to open one of the doors upstairs
                         or am I overthinking this?"
+                        scene livingroomkey2
                         $ westKey = westKey +1
                         "(You pick up the key and decide to go back into the hallway)"
                         jump hallway
 
 # If got west key but not north key game still going
     elif westKey >= 1:
+        scene livingroom2
         if northkey <= 0:
             "(There's a lot of boxes, stuffed with the memories of that late family member you never met)"
             "(The walls are near barren, except for an oddly shaped ornament, illuminated by the light from the moon)"
@@ -587,6 +590,7 @@ label southOpen:
         the floor boards as you walk through the room)"
         you "Abandoned child rooms are always creepy..."
         "(You untie the ribbon on the bear and pick up the key. The keyring has a rising sun on it.)"
+        scene southroom2
         silence "..."
         "(You feel the hairs on the back of your neck raise)"
         you "Must be the win... well, must be the lack of wind... yeah..."
@@ -594,7 +598,7 @@ label southOpen:
         $ eastkey = eastkey +1
         jump upstairshallway
     elif eastkey >= 1:
-        scene southroom
+        scene southroom2
         "(There's a room with a pristine cot, and toys arranged across a shelf)"
         "(There doesn't seem to be anything else to do in this room)"
         "(So you decide to go back into the hallway)"
