@@ -222,7 +222,7 @@ label hallway:
             elif stairs >= 1:
                 jump upstairshallway
 
-        "Go into the room":
+        "Go into the front room":
             scene neswdoor
             if livingRoomOpen >= 1:
                 jump livingroomopen
