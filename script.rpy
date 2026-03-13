@@ -25,9 +25,9 @@
 ###########################
 label start:
     # The upstair doors
-    default northKey = 0
-    default eastKey = 0
-    default southKey = 0
+    default northkey = 0
+    default eastkey = 0
+    default southkey = 0
     default westKey = 0
     # Living room door
     default livingRoomOpen = 0
@@ -166,6 +166,8 @@ label kitchen2:
                 you "I should find somewhere to relax and drink this"
                 $ tea = tea +1
                 jump hallway
+        "Go back to the hallway":
+            jump hallway
 
 label hallwayDoor:
     scene kitchen
@@ -216,14 +218,14 @@ label hallway:
                 "(You're half expecting a locked door stopping you from going all the way up the stairs)"
                 "(To your relief, there is none)"
                 $ stairs = stairs +1
-                jump upstairsHallway
+                jump upstairshallway
             elif stairs >= 1:
-                jump upstairsHallway
+                jump upstairshallway
 
         "Go into the room":
             scene neswdoor
             if livingRoomOpen >= 1:
-                jump room1Open
+                jump livingroomopen
             elif livingRoomOpen <= 0:
                 "(You walk to the door and push on it)"
                 "(You let out a sigh)"
@@ -232,7 +234,7 @@ label hallway:
                 "(Never Eat Shredded Wheat)"
                 you "What the?"
                 silence "..."
-                jump room1Lock
+                jump livingroomLock
 
         "Go to the front door":
             if frontDoorKey <= 0:
@@ -253,37 +255,37 @@ label hallway:
             jump kitchen2
 
 # North, East, South, West doors unlock
-label upstairsHallway:
+label upstairshallway:
     scene upstairshallway
     "(There's four doors at the top of the stairs, one to the north, one east, one around the corner to the south, and one to the west)"
     "What do you do?"
     menu:
         "North":
-            if northKey >= 1:
+            if northkey >= 1:
                 jump northOpen
-            elif northKey <= 0:
+            elif northkey <= 0:
                 "(It's locked)"
                 "(But there's a number on the door handle)"
                 "(1)"
-                jump upstairsHallway
+                jump upstairshallway
 
         "East":
-            if eastKey >= 1:
+            if eastkey >= 1:
                 jump eastOpen
-            elif eastKey <= 0:
+            elif eastkey <= 0:
                 "(It's locked)"
                 "(But there's a number on the door handle)"
                 "(3)"
-                jump upstairsHallway
+                jump upstairshallway
 
         "South":
-            if southKey >= 1:
+            if southkey >= 1:
                 jump southOpen
-            elif southKey <= 0:
+            elif southkey <= 0:
                 "(It's locked)"
                 "(But there's a number on the door handle)"
                 "(6)"
-                jump upstairsHallway
+                jump upstairshallway
 
         "West":
             if westKey >= 1:
@@ -292,13 +294,13 @@ label upstairsHallway:
                 "(It's locked)"
                 "(But there's a number on the door handle)"
                 "(2)"
-                jump upstairsHallway
+                jump upstairshallway
 
         "Go back down the stairs":
             jump hallway
 
 # Living room door keypad lock
-label room1Lock: #1362
+label livingroomLock: #1362
         you "Never Eat Shredded Wheat huh?"
         "What do you do?"
         menu:
@@ -306,102 +308,101 @@ label room1Lock: #1362
                 jump hallway
             "1":
                 "(It clicks once)"
-                jump room1Lock2
+                jump livingroomLock2
             "2":
                 "(Nothing happens.)"
-                jump room1Lock
+                jump livingroomLock
             "3":
                 "(Nothing happens.)"
-                jump room1Lock
+                jump livingroomLock
             "4":
                 "(Nothing happens.)"
-                jump room1Lock
+                jump livingroomLock
             "5":
                 "(Nothing happens.)"
-                jump room1Lock
+                jump livingroomLock
             "6":
                 "(Nothing happens.)"
-                jump room1Lock
+                jump livingroomLock
 
-label room1Lock2: #1362
+label livingroomLock2: #1362
         "What do you do?"
         menu:
             "Come back later":
                 jump hallway
             "1":
                 "(The lock resets)"
-                jump room1Lock
+                jump livingroomLock
             "2":
                 "(The lock resets)"
-                jump room1Lock
+                jump livingroomLock
             "3":
                 "(It clicks a second time)"
-                jump room1Lock3
+                jump livingroomLock3
             "4":
                 "(The lock resets)"
-                jump room1Lock
+                jump livingroomLock
             "5":
                 "(The lock resets)"
-                jump room1Lock
+                jump livingroomLock
             "6":
                 "(The lock resets)"
-                jump room1Lock
+                jump livingroomLock
 
 
-label room1Lock3: #1362
+label livingroomLock3: #1362
         "What do you do?"
         menu:
             "Come back later":
                 jump hallway
             "1":
                 "(The lock resets)"
-                jump room1Lock
+                jump livingroomLock
             "2":
                 "(The lock resets)"
-                jump room1Lock
+                jump livingroomLock
             "3":
                 "(The lock resets)"
-                jump room1Lock
+                jump livingroomLock
             "4":
                 "(The lock resets)"
-                jump room1Lock
+                jump livingroomLock
             "5":
                 "(The lock resets)"
-                jump room1Lock
+                jump livingroomLock
             "6":
                 "(It clicks a third time)"
-                jump room1Lock4
+                jump livingroomLock4
 
-label room1Lock4: #1362
+label livingroomLock4: #1362
         "What do you do?"
         menu:
             "Come back later":
                 jump hallway
             "1":
                 "(The lock resets)"
-                jump room1Lock
+                jump livingroomLock
             "2":
                 "(The lock clicks open)"
                 $ livingRoomOpen = livingRoomOpen +1
-                jump room1Open
+                jump livingroomopen
             "3":
                 "(The lock resets)"
-                jump room1Lock
+                jump livingroomLock
             "4":
                 "(The lock resets)"
-                jump room1Lock
+                jump livingroomLock
             "5":
                 "(The lock resets)"
-                jump room1Lock
+                jump livingroomLock
             "6":
                 "(The lock resets)"
-                jump room1Lock
+                jump livingroomLock
 
 # Living room unlocked
-label room1Open:
+label livingroomopen:
     scene livingroom
-    if fusebox <= 0:
-
+    if westKey <= 0:
         "(The living room door opens)"
         "(A different smell permiates the air this time as the seal on the door
         is broken and the inside air rushes out)"
@@ -463,156 +464,194 @@ label room1Open:
                         "(You pick up the key and decide to go back into the hallway)"
                         jump hallway
 
-    elif fusebox >= 1:
-        jump ending2
+# If got west key but not north key game still going
+    elif westKey >= 1:
+        if northkey <= 0:
+            "(There's a lot of boxes, stuffed with the memories of that late family member you never met)"
+            "(The walls are near barren, except for an oddly shaped ornament, illuminated by the light from the moon)"
+            "(You go back into the hallway)"
+            jump hallway
+        elif northkey >= 1:
+            if fusebox >= 1:
+                jump ending2
+            elif fusebox <= 0:
+                jump ending1
+
 # North room - office/storage - Final upstair key received
 label northOpen:
     scene northroom
-    "(The inside air pours out as the seal on the door is broken)"
-    you "An office room... or storage?"
-    "(The room is filled with boxes, papers, exercise equiptment, a table, and a chair)"
-    you "There's a fuse box...?"
-    "(There's also what seems to be a fuse box on the wall)"
+    if fusebox <= 0:
+        "(The inside air pours out as the seal on the door is broken)"
+        you "An office room... or storage?"
+        "(The room is filled with boxes, papers, exercise equiptment, a table, and a chair)"
+        you "There's a fuse box...?"
+        "(There's also what seems to be a fuse box on the wall)"
 
-    "What do you do?"
-    menu:
-        "Flip the fuses":
-            scene fusebox
-            "(There's a key wedged into the fusebox)"
-            menu:
-                "Remove the key":
-                    scene fuseboxkeygone
-                    "(The key pulls out with little force)"
-                    you "Is this the front door key?"
-                    $ frontDoorKey = frontDoorKey +1
-                    you "At this point I'm not even going to ask..."
-        "Go back to the hallway":
-            you "I don't trust myself with fuse boxes"
-            jump ending1
-    menu:
-        "Flip the fuses":
-            scene fuseboxon
-            "(You flip the switches and hear a hum of electricity.)"
-            $ fusebox = fusebox +1
-            "(A few old lamps and lights seem to turn on in the house)"
-            "(With the electricity on you feel like getting ready for some sleep)"
-            you "Hmm, I'm unsure if I want a cup of tea before bed or not..."
-            "(You leave the north room and go back down stairs)"
-    jump hallway
+        "What do you do?"
+        menu:
+            "Flip the fuses":
+                scene fusebox
+                "(There's a key wedged into the fusebox)"
+                menu:
+                    "Remove the key":
+                        scene fuseboxkeygone
+                        "(The key pulls out with little force)"
+                        you "Is this the front door key?"
+                        $ frontDoorKey = frontDoorKey +1
+                        you "At this point I'm not even going to ask..."
+            "Go back to the hallway":
+                you "I don't trust myself with fuse boxes"
+                jump ending1
+        menu:
+            "Flip the fuses":
+                scene fuseboxon
+                "(You flip the switches and hear a hum of electricity.)"
+                $ fusebox = fusebox +1
+                "(A few old lamps and lights seem to turn on in the house)"
+                "(With the electricity on you feel like getting ready for some sleep)"
+                you "Hmm, I'm unsure if I want a cup of tea before bed or not..."
+                "(You leave the north room and go back down stairs)"
+        jump hallway
+    elif fusebox >= 1:
+        scene northroom
+        "(The room is filled with boxes, papers, exercise equiptment, a table, and a chair)"
+        "(There's nothing else in here, you return to the hallway)"
+        jump hallway
 
 # East room - bathroom - Third upstair key recieved
 label eastOpen:
-    "(The inside air pours out as the seal on the door is broken)"
-    scene eastroom
-    "(An oddly laid out bathroom)"
-    you "Wow, these fixtures will need redoing..."
-    "What do you do?"
-    menu:
-        "Check the medicine cabinet":
-            you "Another key?"
-            "(A key with the North Star on it's keyring)"
-            you "How'd you ever leave your house with the keys all locked in different rooms?"
-            silence "..."
-            you "...?"
-            silence "..."
-            "(You feel uneasy)"
-            you "I was just talking out loud! Out loud to noone in particular!"
-            you "Please don't let something answer me in the dark, I'm creeped out enough in here as it is"
-            silence "..."
-            "(You head back into the hallway)"
-            $ northKey = northKey +1
-            jump upstairsHallway
+    if northkey <= 0:
+        scene eastroom
+        "(The inside air pours out as the seal on the door is broken)"
+        "(An oddly laid out bathroom)"
+        you "Wow, these fixtures will need redoing..."
+        "What do you do?"
+        menu:
+            "Check the medicine cabinet":
+                you "Another key?"
+                "(A key with the North Star on it's keyring)"
+                you "How'd you ever leave your house with the keys all locked in different rooms?"
+                silence "..."
+                you "...?"
+                silence "..."
+                "(You feel uneasy)"
+                you "I was just talking out loud! Out loud to noone in particular!"
+                you "Please don't let something answer me in the dark, I'm creeped out enough in here as it is"
+                silence "..."
+                "(You head back into the hallway)"
+                $ northkey = northkey +1
+                jump upstairshallway
 
-        "Flush the toilet":
-            "(The toilet flushes with a sputter, barely making a mark on the limescale that coats the inside of the bowl)"
-            you "Gross..."
-            you "Note to self to buy some toilet cleaner... and a brush..."
-            "(You look at the toilet roll holder)"
-            you "And toilet roll... I hope I don't need the toilet tonight"
-            menu:
-                "Check the medicine cabinet":
-                    you "Another key?"
-                    "(A key with the North Star on it's keyring)"
-                    you "How'd you ever leave your house with the keys all locked in different rooms?"
-                    silence "..."
-                    you "...?"
-                    silence "..."
-                    "(You feel uneasy)"
-                    you "I was just talking out loud! Out loud to noone in particular!"
-                    you "Please don't let something answer me in the dark, I'm creeped out enough in here as it is"
-                    silence "..."
-                    "(You head back into the hallway)"
-                    $ northKey = northKey +1
-                    jump upstairsHallway
-        "Go back to the hallway":
-            jump upstairsHallway
+            "Flush the toilet":
+                "(The toilet flushes with a sputter, barely making a mark on the limescale that coats the inside of the bowl)"
+                you "Gross..."
+                you "Note to self to buy some toilet cleaner... and a brush..."
+                "(You look at the toilet roll holder)"
+                you "And toilet roll... I hope I don't need the toilet tonight"
+                menu:
+                    "Check the medicine cabinet":
+                        you "Another key?"
+                        "(A key with the North Star on it's keyring)"
+                        you "How'd you ever leave your house with the keys all locked in different rooms?"
+                        silence "..."
+                        you "...?"
+                        silence "..."
+                        "(You feel uneasy)"
+                        you "I was just talking out loud! Out loud to noone in particular!"
+                        you "Please don't let something answer me in the dark, I'm creeped out enough in here as it is"
+                        silence "..."
+                        "(You head back into the hallway)"
+                        $ northkey = northkey +1
+                        jump upstairshallway
+            "Go back to the hallway":
+                jump upstairshallway
 
+    elif northkey >= 1:
+        scene eastroom
+        "(An oddly laid out bathroom)"
+        "(You thankfully do not need the toilet yet and there's nothing else in the bathroom that you need)"
+        "(You decide to go back into the hallway)"
+        jump upstairshallway
 
 # South room - child's bedroom - Second upstair key recieved
 label southOpen:
-    "(The inside air does nothing as the seal on the door is broken)"
-    "(It is deathly silent and it feels like there's no atmosphere at all)"
-    silence "..."
-    scene southroom
-    you "It's a children's bedroom?"
-    "(There's a room with a pristine cot, and toys arranged across a shelf)"
-    "(A teddy bear with a key in it's ribbon sits on a rocking chair)"
-    "(Although the chair looks to be usable and functioning, it doesn't budge, even with the movement from
-    the floor boards as you walk through the room)"
-    you "Abandoned child rooms are always creepy..."
-    "(You untie the ribbon on the bear and pick up the key. The keyring has a rising sun on it.)"
-    silence "..."
-    "(You feel the hairs on the back of your neck raise)"
-    you "Must be the win... well, must be the lack of wind... yeah..."
-    "(You make your way back into the upstairs hallway)"
-    $ eastKey = eastKey +1
-    jump upstairsHallway
+    if eastkey <= 0:
+        "(The inside air does nothing as the seal on the door is broken)"
+        "(It is deathly silent and it feels like there's no atmosphere at all)"
+        silence "..."
+        scene southroom
+        you "It's a children's bedroom?"
+        "(There's a room with a pristine cot, and toys arranged across a shelf)"
+        "(A teddy bear with a key in it's ribbon sits on a rocking chair)"
+        "(Although the chair looks to be usable and functioning, it doesn't budge, even with the movement from
+        the floor boards as you walk through the room)"
+        you "Abandoned child rooms are always creepy..."
+        "(You untie the ribbon on the bear and pick up the key. The keyring has a rising sun on it.)"
+        silence "..."
+        "(You feel the hairs on the back of your neck raise)"
+        you "Must be the win... well, must be the lack of wind... yeah..."
+        "(You make your way back into the upstairs hallway)"
+        $ eastkey = eastkey +1
+        jump upstairshallway
+    elif eastkey >= 1:
+        scene southroom
+        "(There's a room with a pristine cot, and toys arranged across a shelf)"
+        "(There doesn't seem to be anything else to do in this room)"
+        "(So you decide to go back into the hallway)"
+        jump upstairshallway
 
 # West room - master bedroom - First upstair key received
 label westOpen:
-    "(Once again the inside air rushes out into the hallway as the seal on the door is broken open)"
-    scene westroom
-    you "Huh... a bedroom?"
-    "(The room is eluminated by the lack of curtains on the window, letting the moonlight pour inside)"
-    "(Several wardrobes, some draws, and a single bed are all that reside here)"
+    if southkey <=0:
+        scene westroom
+        "(Once again the inside air rushes out into the hallway as the seal on the door is broken open)"
+        you "Huh... a bedroom?"
+        "(The room is eluminated by the lack of curtains on the window, letting the moonlight pour inside)"
+        "(Several wardrobes, some draws, and a single bed are all that reside here)"
 
-    "What do you do?"
-    menu:
-        "Check the draws":
-            "(They're suspiciously empty)"
-            "(Clean too, not one bit of dust is inside of the draws)"
-            you "Nope! Not today! Not going to try to think about why this is the
-            only clean part of the entire house!"
-            "(You close the draws and look around)"
+        "What do you do?"
+        menu:
+            "Check the draws":
+                "(They're suspiciously empty)"
+                "(Clean too, not one bit of dust is inside of the draws)"
+                you "Nope! Not today! Not going to try to think about why this is the
+                only clean part of the entire house!"
+                "(You close the draws and look around)"
 
-            menu:
-                "Check the wardrobes?":
-                    "(A coat hanger with a key hangs inside, it has a keyring from the South Pole on it)"
-                    you "cute"
-                    "(The rest of the wardrobes contents are filled with moth eaten clothing dating
-                    back to the 50's and 60's)"
-                    "(You sigh)"
-                    you "These aren't my style but damn they would have been worth so much money
-                    if they were intact"
-                    "(You move the clothing aside and take off the key)"
-                    $ southKey = southKey +1
-                    jump upstairsHallway
+                menu:
+                    "Check the wardrobes?":
+                        "(A coat hanger with a key hangs inside, it has a keyring from the South Pole on it)"
+                        you "cute"
+                        "(The rest of the wardrobes contents are filled with moth eaten clothing dating
+                        back to the 50's and 60's)"
+                        "(You sigh)"
+                        you "These aren't my style but damn they would have been worth so much money
+                        if they were intact"
+                        "(You move the clothing aside and take off the key)"
+                        $ southkey = southkey +1
+                        jump upstairshallway
 
-        "Check the wardrobes":
-            "(A coat hanger with a key hangs inside it has a keyring from the South Pole on it)"
-            you "cute"
-            "(The rest of the wardrobes contents are filled with moth eaten clothing dating
-            back to the 50's and 60's)"
-            "(You sigh)"
-            you "These aren't my style but damn they would have been worth so much money
-            if they were intact"
-            "(You move the clothing aside and take off the key)"
-            $ southKey = southKey +1
-            jump upstairsHallway
+            "Check the wardrobes":
+                "(A coat hanger with a key hangs inside it has a keyring from the South Pole on it)"
+                you "cute"
+                "(The rest of the wardrobes contents are filled with moth eaten clothing dating
+                back to the 50's and 60's)"
+                "(You sigh)"
+                you "These aren't my style but damn they would have been worth so much money
+                if they were intact"
+                "(You move the clothing aside and take off the key)"
+                $ southkey = southkey +1
+                jump upstairshallway
 
-        "Go back into the hallway":
-            jump upstairsHallway
+            "Go back into the hallway":
+                jump upstairshallway
 
+    elif southkey >= 1:
+        scene westroom
+        "(The room is eluminated by the lack of curtains on the window, letting the moonlight pour inside)"
+        "(Several wardrobes, some draws, and a single bed are all that reside here)"
+        "(You already found everything you can in this room, so you decide to go back into the hallway)"
+        jump upstairshallway
 
 label ending1:
     scene ending1zz
