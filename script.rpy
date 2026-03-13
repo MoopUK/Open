@@ -41,14 +41,18 @@ label start:
     default stairs = 0
 
 # Front Door
+    play music "audio/russel.mp3"
     scene opening
     you "So... I'm finally here"
     "(You get out of the taxi and pull your bag out of the back)"
     "(An old house is before you, in the middle of nowhere, surrounded by a forest.)"
     "(A present... of sorts?...)"
     "(An inheritance from a very distant family member you never even met...)"
+    play music "audio/extractorfanlow.mp3" volume 0.5
     "(You hear the taxi drive away back down the gravel road)"
+
     you "I should go inside before it gets too dark"
+    play music "audio/russel.mp3"
 
 # Door is locked, key is in the back garden under a rock, in an envelope, hidden by the lawyers
 # who informed you of your new home
@@ -57,9 +61,11 @@ label start:
     menu:
         "Try the front door":
             scene door
+            stop music
             silence "..."
+            play sound "audio/lockeddoor1.mp3" volume 0.5
             "(It's not open)"
-#            play sound "audio/locked.mp3"
+            play music "audio/russel.mp3"
             "(You remember the lawyer saying something about a 'hide-a-key' somewhere...)"
             menu:
                 "Check your phone":
@@ -72,9 +78,8 @@ label start:
 
 # Back door unlock
 label backGarden:
-    "(You go around the side of the house and open the gate)"
-    # play sound "audio/gate.mp3"
     scene backgarden
+    "(You go around the side of the house and open the gate)"
     "(The back garden is overgrown, dry, and cluttered)"
     "(You see a stone that looks a little uncanny next to the back door)"
     "(The lawyer mentioned something about a 'hide-a-key')"
@@ -83,20 +88,25 @@ label backGarden:
 label pickUpRock:
     "(It feels lighter than a rock and has a latch under it)"
     "(You open the latch)"
-    # play sound "audio/keyJingle.mp3"
+    play sound "audio/lampJingle.mp3"
     "(A key drops out)"
+    stop music
     silence "..."
     you "Hello?"
     "(It feels more silent than before...)"
     "(You look around, seeing nothing, but noticing it is getting darker by the second)"
     you "I guess I should try the door?"
-    # play sound "audio/keyLock.mp3"
+    play sound "audio/doorunlocknew.mp3" volume 0.25
     "(The lock clicks)"
     you "Ok..."
+    scene kitchen
+    play music "audio/fan2.mp3"
     "(You open the door with a tug and push it open)"
     "(A smell permiates the air as the seal on the door is broken and the inside air rushes out)"
+    stop music
     silence "..."
     you "...?"
+    play music "audio/fan2.mp3"
     "(It's the kitchen)"
     jump kitchen
 
@@ -111,7 +121,9 @@ label kitchen:
             "(There's two ovens, a hob, a long counter top, a sink, and a door)"
         "Move some of the dishes to the sink":
             you "I should probably try to clean some of these if I'm going to live here..."
+            stop music
             silence "..."
+            play music "audio/fan2.mp3"
             "(You place some of the dishes into the sink and try the tap)"
             "(It runs dark for a few seconds before spluttering to life with fresh, albeit freezing cold water)"
             "((rinse, scrub, rinse))"
@@ -120,15 +132,21 @@ label kitchen:
     "What do you do next?"
     menu:
         "Go to the interior door":
+            play sound "audio/lockeddoor2.mp3" volume 0.5
             "(You try to open the door and realise it's locked)"
+            stop music
             silence "..."
+            play music "audio/fan2.mp3"
             you "Who locks their inside doors? We're in the middle of nowhere it's not like someone would be robbing the place"
             jump hallwayDoor
 
         "Make yourself a cup of tea":
             "(You rinse and fill the kettle up)"
             "(Pulling some teabags out of your bag, you place it into a rinsed cup)"
+            stop music
             silence "..."
+            play music "audio/fan2.mp3"
+            play sound "audio/kettleoff.mp3"
             "(Pressing the button on the kettle you realise the power isn't on in the kitchen, maybe there's a fuse box somewhere?)"
             "(You decide to try the door near the hallway and realise it's locked)"
             you "Who locks their inside doors? We're in the middle of nowhere it's not like someone would be robbing the place"
@@ -136,6 +154,7 @@ label kitchen:
 
 label kitchen2:
     scene kitchen
+    play music "audio/fan2.mp3"
     "(It's small, cramped, and cluttered with old plates, cups, and cutlery)"
     "What do you do?"
     menu:
@@ -144,7 +163,9 @@ label kitchen2:
             jump kitchen2
         "Move some of the dishes to the sink":
             you "I should probably try to clean some of these if I'm going to live here..."
+            stop music
             silence "..."
+            play music "audio/fan2.mp3"
             "(You place some of the dishes into the sink and try the tap)"
             "(It runs dark for a few seconds before spluttering to life with fresh, albeit freezing cold water)"
             "((rinse, scrub, rinse))"
@@ -153,12 +174,16 @@ label kitchen2:
         "Make yourself a cup of tea":
             "(You rinse and fill the kettle up)"
             "(Pulling some teabags out of your bag, you place it into a rinsed cup)"
+            stop music
             silence "..."
+            play music "audio/fan2.mp3"
             if fusebox <= 0:
+                play sound "audio/kettleoff.mp3"
                 "(Pressing the button on the kettle you realise the power isn't on in the kitchen, maybe there's a fuse box somewhere?)"
                 "(You leave the kitchen again to search for a fusebox)"
                 jump hallway
             elif fusebox >= 1:
+                play sound "audio/kettleboil.mp3"
                 "(Pressing the button on the kettle causes a small hiss to start as the water boils)"
                 you "Finally! I really needed a cup of tea right now"
                 "(After half a minute it clicks, and the hot water is ready)"
@@ -177,29 +202,32 @@ label hallwayDoor:
     jump puzzleBox
 
 label puzzleBox:
+    play music "audio/fan2.mp3"
     "what do you do?"
     menu:
         "Turn the right piece":
-            #play sound "audio/no.mp3"
             "(Nothing happens.)"
+            stop music
             silence "..."
             jump puzzleBox
 
         "Turn the middle piece":
-            #play sound "audio/yes.mp3"
             scene solvedbox
+            play sound "audio/bong.mp3" volume 0.25
             "(It clicks)"
+            stop music
             silence "..."
             "(The key drops out)"
             scene emptybox
+            play sound "audio/doorunlocknew.mp3" volume 0.5
             "(You open the hallway door and step inside)"
+            play music "audio/hallwaynoises.mp3" volume 0.25
             scene hallway
             "(Again, a smell permiates the air as the seal on the door is broken and the inside air rushes out)"
             "(Before you is a hallway, painted in blood-like reds and browns)"
             jump hallway
 
         "Turn the left piece":
-            #play sound "audio/no.mp3"
             "(Nothing happens)"
             silence "..."
             jump puzzleBox
@@ -208,8 +236,8 @@ label puzzleBox:
 # Hallway open
 label hallway:
     scene hallway
+    play music "audio/hallwaynoises.mp3" volume 0.25
     "(The stairs are to your right, the kitchen is behind you, the front door and a living rooms are to your left)"
-
     "What do you do?"
     menu:
         "Go up the stairs":
@@ -228,6 +256,7 @@ label hallway:
                 jump livingroomopen
             elif livingRoomOpen <= 0:
                 "(You walk to the door and push on it)"
+                play sound "audio/lockeddoor2.mp3" volume 0.5
                 "(You let out a sigh)"
                 you "Of course it is..."
                 "(There's a keypad on the door handle with a note)"
@@ -239,11 +268,13 @@ label hallway:
         "Go to the front door":
             if frontDoorKey <= 0:
                 scene frontdoor
+                play sound "audio/lockeddoor1.mp3" volume 0.5
                 "(It's locked)"
                 "(There's no sign of a key being anywhere near the key hooks by the door)"
                 you "I wonder where the key is?"
                 jump hallway
             elif frontDoorKey >= 1:
+                play sound "audio/doorunlocknew.mp3" volume 0.5
                 scene frontdooropening
                 "(The front door opens)"
                 "(A cool air flows in, freshening up the damp, old smell that permiates the home)"
@@ -256,6 +287,7 @@ label hallway:
 
 # North, East, South, West doors unlock
 label upstairshallway:
+    play music "audio/fan1.mp3" volume 0.5
     scene upstairshallway
     "(There's four doors at the top of the stairs, one to the north, one east, one around the corner to the south, and one to the west)"
     "What do you do?"
@@ -264,6 +296,7 @@ label upstairshallway:
             if northkey >= 1:
                 jump northOpen
             elif northkey <= 0:
+                play sound "audio/lockeddoor1.mp3" volume 0.5
                 "(It's locked)"
                 "(But there's a number on the door handle)"
                 "(1)"
@@ -273,6 +306,7 @@ label upstairshallway:
             if eastkey >= 1:
                 jump eastOpen
             elif eastkey <= 0:
+                play sound "audio/lockeddoor2.mp3" volume 0.5
                 "(It's locked)"
                 "(But there's a number on the door handle)"
                 "(3)"
@@ -282,6 +316,7 @@ label upstairshallway:
             if southkey >= 1:
                 jump southOpen
             elif southkey <= 0:
+                play sound "audio/lockeddoor3.mp3" volume 0.5
                 "(It's locked)"
                 "(But there's a number on the door handle)"
                 "(6)"
@@ -291,6 +326,7 @@ label upstairshallway:
             if westKey >= 1:
                 jump westOpen
             elif westKey <= 0:
+                play sound "audio/lockeddoor1.mp3" volume 0.5
                 "(It's locked)"
                 "(But there's a number on the door handle)"
                 "(2)"
@@ -307,6 +343,7 @@ label livingroomLock: #1362
             "Come back later":
                 jump hallway
             "1":
+                play sound "audio/bong.mp3" volume 0.25
                 "(It clicks once)"
                 jump livingroomLock2
             "2":
@@ -337,6 +374,7 @@ label livingroomLock2: #1362
                 "(The lock resets)"
                 jump livingroomLock
             "3":
+                play sound "audio/bong.mp3" volume 0.25
                 "(It clicks a second time)"
                 jump livingroomLock3
             "4":
@@ -371,6 +409,7 @@ label livingroomLock3: #1362
                 "(The lock resets)"
                 jump livingroomLock
             "6":
+                play sound "audio/bong.mp3" volume 0.25
                 "(It clicks a third time)"
                 jump livingroomLock4
 
@@ -383,7 +422,9 @@ label livingroomLock4: #1362
                 "(The lock resets)"
                 jump livingroomLock
             "2":
+                play sound "audio/bong.mp3" volume 0.25
                 "(The lock clicks open)"
+                play sound "audio/doorknobclick.mp3" volume 0.75
                 $ livingRoomOpen = livingRoomOpen +1
                 jump livingroomopen
             "3":
@@ -403,10 +444,13 @@ label livingroomLock4: #1362
 label livingroomopen:
     scene livingroom
     if westKey <= 0:
+        play sound "audio/doorunlocknew.mp3" volume 0.5
         "(The living room door opens)"
         "(A different smell permiates the air this time as the seal on the door
         is broken and the inside air rushes out)"
+        stop music
         silence "..."
+        play music "audio/fan1.mp3" volume 0.5
         "(It takes a moment for your eyes to adjust, but you notice a beam of moonlight coming through a
         curtain on the other side)"
 
@@ -414,19 +458,24 @@ label livingroomopen:
         menu:
             "Open the curtains":
                 "(You carefully walk through the boxes and clutter to get to the curtains)"
+                play sound "audio/curtain.mp3"
                 "(Opening the curtains, moonlight floods into the room)"
                 scene opencurtainlivingroom
                 "(Revealing it's a living room, although the dust pile up implies nothing has been living here
                 for quite some time)"
 
             "Try the lights":
+                    play sound "audio/switchon.mp3"
                     "(There's no power)"
                     you "There has to be a fusebox somewhere..."
+                    stop music
                     silence "..."
                     you "... hello?"
+                    play music "audio/fan1.mp3" volume 0.5
                     "(The silence feels weighted, as you feel like someone is with you)"
                     "(but there's no reason for why anyone else would be here)"
                     "(It's probably just your imagination...)"
+                    play sound "audio/curtain.mp3"
                     "(To ease your mind you pull open the curtains to let some light inside)"
                     scene opencurtainlivingroom
 
@@ -449,7 +498,9 @@ label livingroomopen:
 
             "Look through the boxes":
                 "(There's a lot of cooking books, knitting patterns, bits of clutter, and some baby toys in the boxes)"
+                stop music
                 silence "..."
+                play music "audio/fan1.mp3" volume 0.5
                 you "I heard they were alone when they died, I don't think they were married either..."
                 you "Kind of why I got the house in the first place, there was no will and I'm the last person left in our bloodline"
                 "(You close the boxes back up)"
@@ -468,6 +519,7 @@ label livingroomopen:
 
 # If got west key but not north key game still going
     elif westKey >= 1:
+        play sound "audio/doorunlocknew.mp3" volume 0.5
         scene livingroom2
         if northkey <= 0:
             "(There's a lot of boxes, stuffed with the memories of that late family member you never met)"
@@ -484,6 +536,7 @@ label livingroomopen:
 label northOpen:
     scene northroom
     if fusebox <= 0:
+        play sound "audio/doorunlocknew.mp3" volume 0.5
         "(The inside air pours out as the seal on the door is broken)"
         you "An office room... or storage?"
         "(The room is filled with boxes, papers, exercise equiptment, a table, and a chair)"
@@ -498,6 +551,7 @@ label northOpen:
                 menu:
                     "Remove the key":
                         scene fuseboxkeygone
+                        play sound "audio/lampjingle.mp3"
                         "(The key pulls out with little force)"
                         you "Is this the front door key?"
                         $ frontDoorKey = frontDoorKey +1
@@ -508,6 +562,7 @@ label northOpen:
         menu:
             "Flip the fuses":
                 scene fuseboxon
+                play sound "audio/fusesonswitch.mp3"
                 "(You flip the switches and hear a hum of electricity.)"
                 $ fusebox = fusebox +1
                 "(A few old lamps and lights seem to turn on in the house)"
@@ -524,6 +579,7 @@ label northOpen:
 # East room - bathroom - Third upstair key recieved
 label eastOpen:
     if northkey <= 0:
+        play sound "audio/doorunlocknew.mp3" volume 0.5
         scene eastroom
         "(The inside air pours out as the seal on the door is broken)"
         "(An oddly laid out bathroom)"
@@ -534,6 +590,7 @@ label eastOpen:
                 you "Another key?"
                 "(A key with the North Star on it's keyring)"
                 you "How'd you ever leave your house with the keys all locked in different rooms?"
+                stop music
                 silence "..."
                 you "...?"
                 silence "..."
@@ -541,11 +598,13 @@ label eastOpen:
                 you "I was just talking out loud! Out loud to noone in particular!"
                 you "Please don't let something answer me in the dark, I'm creeped out enough in here as it is"
                 silence "..."
+                play music "audio/fan1.mp3" volume 0.5
                 "(You head back into the hallway)"
                 $ northkey = northkey +1
                 jump upstairshallway
 
             "Flush the toilet":
+                play sound "audio/toiletflush.mp3"
                 "(The toilet flushes with a sputter, barely making a mark on the limescale that coats the inside of the bowl)"
                 you "Gross..."
                 you "Note to self to buy some toilet cleaner... and a brush..."
@@ -556,6 +615,7 @@ label eastOpen:
                         you "Another key?"
                         "(A key with the North Star on it's keyring)"
                         you "How'd you ever leave your house with the keys all locked in different rooms?"
+                        stop music
                         silence "..."
                         you "...?"
                         silence "..."
@@ -563,6 +623,7 @@ label eastOpen:
                         you "I was just talking out loud! Out loud to noone in particular!"
                         you "Please don't let something answer me in the dark, I'm creeped out enough in here as it is"
                         silence "..."
+                        play music "audio/fan1.mp3" volume 0.5
                         "(You head back into the hallway)"
                         $ northkey = northkey +1
                         jump upstairshallway
@@ -570,6 +631,7 @@ label eastOpen:
                 jump upstairshallway
 
     elif northkey >= 1:
+        play sound "audio/doorunlocknew.mp3" volume 0.5
         scene eastroom
         "(An oddly laid out bathroom)"
         "(You thankfully do not need the toilet yet and there's nothing else in the bathroom that you need)"
@@ -579,8 +641,10 @@ label eastOpen:
 # South room - child's bedroom - Second upstair key recieved
 label southOpen:
     if eastkey <= 0:
+        play sound "audio/doorunlocknew.mp3" volume 0.5
         "(The inside air does nothing as the seal on the door is broken)"
         "(It is deathly silent and it feels like there's no atmosphere at all)"
+        stop music
         silence "..."
         scene southroom
         you "It's a children's bedroom?"
@@ -591,6 +655,7 @@ label southOpen:
         you "Abandoned child rooms are always creepy..."
         "(You untie the ribbon on the bear and pick up the key. The keyring has a rising sun on it.)"
         scene southroom2
+        play sound "audio/air.mp3" volume 0.15
         silence "..."
         "(You feel the hairs on the back of your neck raise)"
         you "Must be the win... well, must be the lack of wind... yeah..."
@@ -598,6 +663,7 @@ label southOpen:
         $ eastkey = eastkey +1
         jump upstairshallway
     elif eastkey >= 1:
+        play sound "audio/doorunlocknew.mp3" volume 0.5
         scene southroom2
         "(There's a room with a pristine cot, and toys arranged across a shelf)"
         "(There doesn't seem to be anything else to do in this room)"
@@ -607,6 +673,7 @@ label southOpen:
 # West room - master bedroom - First upstair key received
 label westOpen:
     if southkey <=0:
+        play sound "audio/doorunlocknew.mp3" volume 0.5
         scene westroom
         "(Once again the inside air rushes out into the hallway as the seal on the door is broken open)"
         you "Huh... a bedroom?"
@@ -651,6 +718,7 @@ label westOpen:
                 jump upstairshallway
 
     elif southkey >= 1:
+        play sound "audio/doorunlocknew.mp3" volume 0.5
         scene westroom
         "(The room is eluminated by the lack of curtains on the window, letting the moonlight pour inside)"
         "(Several wardrobes, some draws, and a single bed are all that reside here)"
