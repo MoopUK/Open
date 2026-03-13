@@ -63,9 +63,9 @@ label start:
             scene door
             stop music
             silence "..."
+            play music "audio/russel.mp3"
             play sound "audio/lockeddoor1.mp3" volume 0.5
             "(It's not open)"
-            play music "audio/russel.mp3"
             "(You remember the lawyer saying something about a 'hide-a-key' somewhere...)"
             menu:
                 "Check your phone":
@@ -125,6 +125,7 @@ label kitchen:
             silence "..."
             play music "audio/fan2.mp3"
             "(You place some of the dishes into the sink and try the tap)"
+            play sound "audio/tap.mp3" volume 0.5
             "(It runs dark for a few seconds before spluttering to life with fresh, albeit freezing cold water)"
             "((rinse, scrub, rinse))"
             "(You washed some dishes)"
@@ -167,6 +168,7 @@ label kitchen2:
             silence "..."
             play music "audio/fan2.mp3"
             "(You place some of the dishes into the sink and try the tap)"
+            play sound "audio/tap.mp3" volume 0.5
             "(It runs dark for a few seconds before spluttering to life with fresh, albeit freezing cold water)"
             "((rinse, scrub, rinse))"
             "(You washed some dishes)"
@@ -242,6 +244,7 @@ label hallway:
     menu:
         "Go up the stairs":
             if stairs <= 0:
+                play sound "audio/stairs.mp3"
                 "(There's a weirdly shaped staircase with a 180 degree turn at the start)"
                 "(You're half expecting a locked door stopping you from going all the way up the stairs)"
                 "(To your relief, there is none)"
@@ -423,8 +426,8 @@ label livingroomLock4: #1362
                 jump livingroomLock
             "2":
                 play sound "audio/bong.mp3" volume 0.25
-                "(The lock clicks open)"
                 play sound "audio/doorknobclick.mp3" volume 0.75
+                "(The lock clicks open)"
                 $ livingRoomOpen = livingRoomOpen +1
                 jump livingroomopen
             "3":
@@ -444,7 +447,6 @@ label livingroomLock4: #1362
 label livingroomopen:
     scene livingroom
     if westKey <= 0:
-        play sound "audio/doorunlocknew.mp3" volume 0.5
         "(The living room door opens)"
         "(A different smell permiates the air this time as the seal on the door
         is broken and the inside air rushes out)"
@@ -458,9 +460,9 @@ label livingroomopen:
         menu:
             "Open the curtains":
                 "(You carefully walk through the boxes and clutter to get to the curtains)"
-                play sound "audio/curtain.mp3"
                 "(Opening the curtains, moonlight floods into the room)"
                 scene opencurtainlivingroom
+                play sound "audio/curtain.mp3"
                 "(Revealing it's a living room, although the dust pile up implies nothing has been living here
                 for quite some time)"
 
@@ -519,7 +521,6 @@ label livingroomopen:
 
 # If got west key but not north key game still going
     elif westKey >= 1:
-        play sound "audio/doorunlocknew.mp3" volume 0.5
         scene livingroom2
         if northkey <= 0:
             "(There's a lot of boxes, stuffed with the memories of that late family member you never met)"
@@ -568,6 +569,7 @@ label northOpen:
                 "(A few old lamps and lights seem to turn on in the house)"
                 "(With the electricity on you feel like getting ready for some sleep)"
                 you "Hmm, I'm unsure if I want a cup of tea before bed or not..."
+                play sound "audio/stairs.mp3"
                 "(You leave the north room and go back down stairs)"
         jump hallway
     elif fusebox >= 1:
@@ -631,7 +633,6 @@ label eastOpen:
                 jump upstairshallway
 
     elif northkey >= 1:
-        play sound "audio/doorunlocknew.mp3" volume 0.5
         scene eastroom
         "(An oddly laid out bathroom)"
         "(You thankfully do not need the toilet yet and there's nothing else in the bathroom that you need)"
@@ -663,7 +664,6 @@ label southOpen:
         $ eastkey = eastkey +1
         jump upstairshallway
     elif eastkey >= 1:
-        play sound "audio/doorunlocknew.mp3" volume 0.5
         scene southroom2
         "(There's a room with a pristine cot, and toys arranged across a shelf)"
         "(There doesn't seem to be anything else to do in this room)"
@@ -698,6 +698,7 @@ label westOpen:
                         "(You sigh)"
                         you "These aren't my style but damn they would have been worth so much money
                         if they were intact"
+                        play sound "audio/coathanger.mp3"
                         "(You move the clothing aside and take off the key)"
                         $ southkey = southkey +1
                         jump upstairshallway
@@ -718,7 +719,6 @@ label westOpen:
                 jump upstairshallway
 
     elif southkey >= 1:
-        play sound "audio/doorunlocknew.mp3" volume 0.5
         scene westroom
         "(The room is eluminated by the lack of curtains on the window, letting the moonlight pour inside)"
         "(Several wardrobes, some draws, and a single bed are all that reside here)"
